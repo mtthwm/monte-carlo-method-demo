@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monte Carlo Method</title>
+</head>
+<body>
+    <canvas id="main-canvas" width="500" height="500">
+
+    </canvas>
+</body>
+<script>
+    const c = document.getElementById("main-canvas");
+    const width = parseInt(c.width);
+    const height = parseInt(c.height);
+    const strokeWidth = 3;
+    const radius = width/2;
+    const dotRadius = 3;
+    const totalPoints = 1000;
+    const centerX = width/2;
+    const centerY = height/2;
+    let circleCount = 0;
+    let squareCount = 0;
+    const ctx = c.getContext("2d");
+
+    ctx.lineWidth = strokeWidth;
+
+    const primaryColor = "#212121";
+    const secondaryColor = "#ffffff";
+    const tertiaryColor = "#adadad";
+
+    ctx.fillStyle = primaryColor;
+    ctx.fillRect(0,0,width,height);
+
+    ctx.beginPath();
+    ctx.strokeStyle = secondaryColor;
+    ctx.rect(0,0,width,height);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.strokeStyle = secondaryColor;
+    ctx.arc(centerX, centerY, radius - strokeWidth, 0, 2*Math.PI);
+    ctx.stroke();
+
+    for (let i = 0; i < totalPoints; i++)
+    {
+        const x = parseInt(Math.random() * width+1);
+        const y = parseInt(Math.random() * height+1);
+        
+        ctx.beginPath();
+        if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < radius)
+        {
+            circleCount++;
+            ctx.fillStyle = tertiaryColor;
+        } else {
+            ctx.fillStyle = secondaryColor;
+        }
+        squareCount++;
+        ctx.arc(x, y, dotRadius, 0, 2*Math.PI);
+        ctx.fill();
+    }
+    console.log(`Circle Count: ${circleCount} Square Count: ${squareCount}`)
+
+    const piEstimate = (circleCount * Math.pow(width, 2)) / (squareCount * Math.pow(radius, 2));
+
+    console.log(`PI Estimate: ${piEstimate}`);
+
+    document.write(`<img src="${c.toDataURL("image/png")}"/>`)
+</script>
+</html>
